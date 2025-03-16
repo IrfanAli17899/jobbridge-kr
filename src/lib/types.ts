@@ -1,11 +1,11 @@
 
-export type JobLocation = 'Busan' | 'Seoul' | 'Incheon' | 'Daegu' | 'Daejeon' | 'Gwangju' | 'Ulsan' | 'Sejong' | 'Remote';
+export type JobLocation = 'Busan' | 'Seoul' | 'Incheon' | 'Daegu' | 'Daejeon' | 'Gwangju' | 'Ulsan' | 'Sejong' | 'Jeju' | 'Remote';
 
-export type CountryOfOrigin = 'Pakistan' | 'Vietnam' | 'Philippines' | 'Indonesia' | 'Thailand' | 'Cambodia' | 'Myanmar' | 'Nepal' | 'Bangladesh' | 'Sri Lanka' | 'Other';
+export type CountryOfOrigin = 'Pakistan' | 'Vietnam' | 'Philippines' | 'Indonesia' | 'Thailand' | 'Cambodia' | 'Myanmar' | 'Nepal' | 'Bangladesh' | 'Sri Lanka' | 'India' | 'Other';
 
 export type JobCategory = 'Manufacturing' | 'Construction' | 'Agriculture' | 'Fishing' | 'Service Industry' | 'IT & Technology' | 'Healthcare' | 'Hospitality' | 'Education' | 'Other';
 
-export type JobType = 'Full-time' | 'Part-time' | 'Contract' | 'Temporary' | 'Internship';
+export type JobType = 'Full-time' | 'Part-time' | 'Contract' | 'Temporary' | 'Seasonal' | 'Internship';
 
 export type ExperienceLevel = 'Entry Level' | 'Mid Level' | 'Senior Level';
 

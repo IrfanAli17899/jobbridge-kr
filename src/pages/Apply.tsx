@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -302,7 +301,7 @@ const Apply = () => {
                                   {country}
                                 </SelectItem>
                               ))}
-                              <SelectItem value="Other">Other</SelectItem>
+                              <SelectItem value="other-country">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormDescription>

@@ -216,7 +216,7 @@ const Jobs = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="">All Locations</SelectItem>
+                          <SelectItem value="all-locations">All Locations</SelectItem>
                           {locations.map((location) => (
                             <SelectItem key={location} value={location}>
                               {location}
@@ -237,7 +237,7 @@ const Jobs = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="">All Categories</SelectItem>
+                          <SelectItem value="all-categories">All Categories</SelectItem>
                           {categories.map((category) => (
                             <SelectItem key={category} value={category}>
                               {category}
@@ -258,7 +258,7 @@ const Jobs = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="">All Types</SelectItem>
+                          <SelectItem value="all-types">All Types</SelectItem>
                           {types.map((type) => (
                             <SelectItem key={type} value={type}>
                               {type}

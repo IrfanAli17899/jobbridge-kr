@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Job, JobApplication, User, ApplicationStatus } from '@/lib/types';
 
@@ -68,7 +67,7 @@ const sampleJobs: Job[] = [
     benefits: [
       'Competitive salary',
       'Overtime pay',
-      'Worker's compensation insurance',
+      'Worker\'s compensation insurance',
       'Accommodation arranged',
       'Transportation to and from work sites',
     ],
@@ -95,7 +94,7 @@ const sampleJobs: Job[] = [
     },
     description: 'LG CNS is looking for IT Support Specialists to join our Seoul headquarters. The role involves providing technical support to internal staff and troubleshooting IT issues.',
     requirements: [
-      'Bachelor's degree in IT or related field',
+      'Bachelor\'s degree in IT or related field',
       'At least 2 years of IT support experience',
       'Knowledge of Windows and Mac OS environments',
       'Fluent English communication skills',
@@ -387,7 +386,6 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [error, setError] = useState<string | null>(null);
   const [currentJob, setCurrentJob] = useState<Job | null>(null);
 
-  // Simulate loading
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {

@@ -40,10 +40,10 @@ const Jobs = () => {
   const [filtersVisible, setFiltersVisible] = useState<boolean>(false);
   
   // All possible filter options
-  const locations: JobLocation[] = ['Seoul', 'Busan', 'Incheon', 'Daegu', 'Daejeon', 'Gwangju', 'Ulsan', 'Sejong', 'Remote'];
+  const locations: JobLocation[] = ['Seoul', 'Busan', 'Incheon', 'Daegu', 'Daejeon', 'Gwangju', 'Ulsan', 'Sejong', 'Remote', 'Jeju'];
   const categories: JobCategory[] = ['Manufacturing', 'Construction', 'Agriculture', 'Fishing', 'Service Industry', 'IT & Technology', 'Healthcare', 'Hospitality', 'Education', 'Other'];
-  const types: JobType[] = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
-  const countries: CountryOfOrigin[] = ['Pakistan', 'Vietnam', 'Philippines', 'Indonesia', 'Thailand', 'Cambodia', 'Myanmar', 'Nepal', 'Bangladesh', 'Sri Lanka', 'Other'];
+  const types: JobType[] = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Seasonal', 'Internship'];
+  const countries: CountryOfOrigin[] = ['Pakistan', 'Vietnam', 'Philippines', 'Indonesia', 'Thailand', 'Cambodia', 'Myanmar', 'Nepal', 'Bangladesh', 'Sri Lanka', 'India', 'Other'];
   
   // Apply filters
   useEffect(() => {
@@ -60,17 +60,17 @@ const Jobs = () => {
     }
     
     // Location filter
-    if (selectedLocation) {
+    if (selectedLocation && selectedLocation !== 'all-locations') {
       results = results.filter(job => job.location === selectedLocation);
     }
     
     // Category filter
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== 'all-categories') {
       results = results.filter(job => job.category === selectedCategory);
     }
     
     // Job type filter
-    if (selectedType) {
+    if (selectedType && selectedType !== 'all-types') {
       results = results.filter(job => job.type === selectedType);
     }
     
@@ -135,6 +135,26 @@ const Jobs = () => {
     } else {
       setSelectedCountries([...selectedCountries, country]);
     }
+  };
+  
+  // Fix: Create handleLocationChange function with proper types
+  const handleLocationChange = (value: string) => {
+    setSelectedLocation(value);
+  };
+
+  // Fix: Create handleCategoryChange function with proper types
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+  };
+
+  // Fix: Create handleTypeChange function with proper types
+  const handleTypeChange = (value: string) => {
+    setSelectedType(value);
+  };
+
+  // Fix: Create handleSortChange function with proper types
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
   };
   
   return (
@@ -210,7 +230,7 @@ const Jobs = () => {
                 <AccordionItem value="location" className="border-b">
                   <AccordionTrigger className="text-sm font-medium">Location</AccordionTrigger>
                   <AccordionContent>
-                    <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                    <Select value={selectedLocation} onValueChange={handleLocationChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
@@ -231,7 +251,7 @@ const Jobs = () => {
                 <AccordionItem value="category" className="border-b">
                   <AccordionTrigger className="text-sm font-medium">Job Category</AccordionTrigger>
                   <AccordionContent>
-                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <Select value={selectedCategory} onValueChange={handleCategoryChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -252,7 +272,7 @@ const Jobs = () => {
                 <AccordionItem value="type" className="border-b">
                   <AccordionTrigger className="text-sm font-medium">Job Type</AccordionTrigger>
                   <AccordionContent>
-                    <Select value={selectedType} onValueChange={setSelectedType}>
+                    <Select value={selectedType} onValueChange={handleTypeChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
@@ -339,7 +359,7 @@ const Jobs = () => {
                 
                 <div className="flex items-center">
                   <ArrowDownUp className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <Select value={sortBy} onValueChange={setSortBy}>
+                  <Select value={sortBy} onValueChange={handleSortChange}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>

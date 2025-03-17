@@ -8,6 +8,8 @@ import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
+import EditJob from "@/pages/EditJob";
+import ApplicationDetails from "@/pages/ApplicationDetails";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +19,10 @@ export const router = createBrowserRouter([
   {
     path: "/jobs",
     element: <Jobs />,
+  },
+  {
+    path: "/job/:id",
+    element: <JobDetails />,
   },
   {
     path: "/jobs/:id",
@@ -29,6 +35,14 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/edit-job/:id",
+    element: <EditJob />,
+  },
+  {
+    path: "/application/:id",
+    element: <ApplicationDetails />,
   },
   {
     path: "/signin",

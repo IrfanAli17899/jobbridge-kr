@@ -52,30 +52,60 @@ export type Database = {
       }
       job_applications: {
         Row: {
+          country: string | null
           cover_letter: string | null
           created_at: string | null
+          currently_in_korea: boolean | null
+          education: Json | null
+          email: string | null
           id: string
           job_id: string | null
+          languages: Json | null
+          name: string | null
+          notes: string | null
+          passport_number: string | null
+          phone: string | null
+          previous_experience: Json | null
           resume_url: string
           status: string
           updated_at: string | null
           user_id: string | null
         }
         Insert: {
+          country?: string | null
           cover_letter?: string | null
           created_at?: string | null
+          currently_in_korea?: boolean | null
+          education?: Json | null
+          email?: string | null
           id?: string
           job_id?: string | null
+          languages?: Json | null
+          name?: string | null
+          notes?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          previous_experience?: Json | null
           resume_url: string
           status?: string
           updated_at?: string | null
           user_id?: string | null
         }
         Update: {
+          country?: string | null
           cover_letter?: string | null
           created_at?: string | null
+          currently_in_korea?: boolean | null
+          education?: Json | null
+          email?: string | null
           id?: string
           job_id?: string | null
+          languages?: Json | null
+          name?: string | null
+          notes?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          previous_experience?: Json | null
           resume_url?: string
           status?: string
           updated_at?: string | null

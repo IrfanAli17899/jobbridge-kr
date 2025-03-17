@@ -1,48 +1,81 @@
 
-import { Job, JobApplication, ApplicationStatus } from '@/lib/types';
+import { JobLocation, JobCategory, JobType, CountryOfOrigin } from '@/lib/types';
 
-export const getJobById = (jobs: Job[], id: string): Job | undefined => {
-  return jobs.find(job => job.id === id);
+// Job types array
+export const jobTypes: JobType[] = [
+  'Full-time',
+  'Part-time',
+  'Contract',
+  'Temporary',
+  'Seasonal',
+  'Internship'
+];
+
+// Job categories array
+export const jobCategories: JobCategory[] = [
+  'Manufacturing',
+  'Construction',
+  'Agriculture',
+  'Fishing',
+  'Service Industry',
+  'IT & Technology',
+  'Healthcare',
+  'Hospitality',
+  'Education',
+  'Other'
+];
+
+// Job locations array
+export const jobLocations: JobLocation[] = [
+  'Busan',
+  'Seoul',
+  'Incheon',
+  'Daegu',
+  'Daejeon',
+  'Gwangju',
+  'Ulsan',
+  'Sejong',
+  'Jeju',
+  'Remote'
+];
+
+// Countries of origin array
+export const countryOrigins: CountryOfOrigin[] = [
+  'Pakistan',
+  'Vietnam',
+  'Philippines',
+  'Indonesia',
+  'Thailand',
+  'Cambodia',
+  'Myanmar',
+  'Nepal',
+  'Bangladesh',
+  'Sri Lanka',
+  'India',
+  'Other'
+];
+
+// Format salary for display
+export const formatSalary = (min: number, max: number, currency: string) => {
+  if (currency === 'KRW') {
+    return `${(min / 1000000).toFixed(1)}M - ${(max / 1000000).toFixed(1)}M KRW`;
+  }
+  return `${min} - ${max} ${currency}`;
 };
 
-export const getApplicationsForJob = (applications: JobApplication[], jobId: string): JobApplication[] => {
-  return applications.filter(app => app.jobId === jobId);
+// Calculate days since posting
+export const calculateDaysAgo = (dateString: string) => {
+  const posted = new Date(dateString);
+  const today = new Date();
+  const diffTime = Math.abs(today.getTime() - posted.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return '1 day ago';
+  return `${diffDays} days ago`;
 };
 
-export const addJob = (jobs: Job[], jobData: Omit<Job, 'id' | 'postedDate'>): Job => {
-  const newJob: Job = {
-    ...jobData,
-    id: (jobs.length + 1).toString(),
-    postedDate: new Date().toISOString().split('T')[0],
-  };
-  return newJob;
-};
-
-export const updateJob = (jobs: Job[], updatedJob: Job): Job[] => {
-  return jobs.map(job => job.id === updatedJob.id ? updatedJob : job);
-};
-
-export const deleteJob = (jobs: Job[], id: string): Job[] => {
-  return jobs.filter(job => job.id !== id);
-};
-
-export const addApplication = (
-  applications: JobApplication[], 
-  applicationData: Omit<JobApplication, 'id' | 'appliedDate' | 'status'>
-): JobApplication => {
-  const newApplication: JobApplication = {
-    ...applicationData,
-    id: (applications.length + 1).toString(),
-    appliedDate: new Date().toISOString().split('T')[0],
-    status: 'Pending',
-  };
-  return newApplication;
-};
-
-export const updateApplicationStatus = (
-  applications: JobApplication[], 
-  id: string, 
-  status: ApplicationStatus
-): JobApplication[] => {
-  return applications.map(app => app.id === id ? { ...app, status } : app);
+// Format date for display
+export const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
 };

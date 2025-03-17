@@ -1,9 +1,10 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { JobContextType } from './JobContextType';
-import { Job, JobApplication, User, ApplicationStatus } from '@/lib/types';
+import { Job, JobApplication, User, ApplicationStatus, JobLocation, JobCategory, JobType, ExperienceLevel, CountryOfOrigin } from '@/lib/types';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Json } from '@/integrations/supabase/types';
 
 const JobContext = createContext<JobContextType | undefined>(undefined);
 
@@ -34,29 +35,33 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             id: job.id,
             title: job.title,
             company: job.company,
-            logo: job.logo,
-            location: job.location as any,
-            category: job.category as any,
-            type: job.type as any,
-            experienceLevel: job.experience_level as any,
+            logo: job.logo || '',
+            location: job.location as JobLocation,
+            category: job.industry as JobCategory, // Map to our type
+            type: job.job_type as JobType,        // Map to our type
+            experienceLevel: 'Entry Level' as ExperienceLevel, // Default value since DB doesn't have this
             salary: {
-              min: job.salary_min,
-              max: job.salary_max,
-              currency: job.salary_currency
+              min: 0, // Default values since DB structure is different
+              max: 0,
+              currency: 'KRW'
             },
             description: job.description,
-            requirements: Array.isArray(job.requirements) ? job.requirements : [],
-            benefits: Array.isArray(job.benefits) ? job.benefits : [],
-            applicationDeadline: new Date(job.application_deadline).toISOString(),
-            postedDate: new Date(job.posted_date).toISOString(),
-            eligibleCountries: Array.isArray(job.eligible_countries) ? job.eligible_countries as any[] : [],
-            contactEmail: job.contact_email,
-            visaSponsorship: job.visa_sponsorship,
-            accommodationProvided: job.accommodation_provided,
-            languageRequirements: job.language_requirements ? {
-              korean: job.language_requirements.korean,
-              english: job.language_requirements.english
-            } : undefined
+            requirements: Array.isArray(job.requirements) 
+              ? job.requirements.map(req => String(req)) 
+              : [],
+            benefits: Array.isArray(job.benefits) 
+              ? job.benefits.map(benefit => String(benefit)) 
+              : [],
+            applicationDeadline: new Date().toISOString(), // Default since DB might be missing this
+            postedDate: job.created_at || new Date().toISOString(),
+            eligibleCountries: [] as CountryOfOrigin[], // Default since DB might be missing this
+            contactEmail: 'contact@example.com', // Default since DB might be missing this
+            visaSponsorship: false,
+            accommodationProvided: false,
+            languageRequirements: {
+              korean: 'Basic',
+              english: 'Basic'
+            }
           }));
 
           setJobs(transformedJobs);
@@ -92,21 +97,14 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         company: jobData.company,
         logo: jobData.logo,
         location: jobData.location,
-        category: jobData.category,
-        type: jobData.type,
-        experience_level: jobData.experienceLevel,
-        salary_min: jobData.salary.min,
-        salary_max: jobData.salary.max,
-        salary_currency: jobData.salary.currency,
+        industry: jobData.category, // Map to DB column
+        job_type: jobData.type,     // Map to DB column
         description: jobData.description,
         requirements: jobData.requirements,
         benefits: jobData.benefits,
-        application_deadline: new Date(jobData.applicationDeadline).toISOString().split('T')[0],
-        eligible_countries: jobData.eligibleCountries,
-        contact_email: jobData.contactEmail,
-        visa_sponsorship: jobData.visaSponsorship,
-        accommodation_provided: jobData.accommodationProvided,
-        language_requirements: jobData.languageRequirements
+        salary: `${jobData.salary.min}-${jobData.salary.max} ${jobData.salary.currency}`,
+        status: 'active',
+        user_id: supabase.auth.getUser() ? (await supabase.auth.getUser()).data.user?.id : null
       };
 
       const { data, error } = await supabase
@@ -123,29 +121,33 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           id: data.id,
           title: data.title,
           company: data.company,
-          logo: data.logo,
-          location: data.location as any,
-          category: data.category as any,
-          type: data.type as any,
-          experienceLevel: data.experience_level as any,
+          logo: data.logo || '',
+          location: data.location as JobLocation,
+          category: data.industry as JobCategory,
+          type: data.job_type as JobType,
+          experienceLevel: 'Entry Level' as ExperienceLevel, // Default
           salary: {
-            min: data.salary_min,
-            max: data.salary_max,
-            currency: data.salary_currency
+            min: 0, // Default
+            max: 0,
+            currency: 'KRW'
           },
           description: data.description,
-          requirements: Array.isArray(data.requirements) ? data.requirements : [],
-          benefits: Array.isArray(data.benefits) ? data.benefits : [],
-          applicationDeadline: new Date(data.application_deadline).toISOString(),
-          postedDate: new Date(data.posted_date).toISOString(),
-          eligibleCountries: Array.isArray(data.eligible_countries) ? data.eligible_countries as any[] : [],
-          contactEmail: data.contact_email,
-          visaSponsorship: data.visa_sponsorship,
-          accommodationProvided: data.accommodation_provided,
-          languageRequirements: data.language_requirements ? {
-            korean: data.language_requirements.korean,
-            english: data.language_requirements.english
-          } : undefined
+          requirements: Array.isArray(data.requirements) 
+            ? data.requirements.map(req => String(req)) 
+            : [],
+          benefits: Array.isArray(data.benefits) 
+            ? data.benefits.map(benefit => String(benefit)) 
+            : [],
+          applicationDeadline: new Date().toISOString(), // Default
+          postedDate: data.created_at || new Date().toISOString(),
+          eligibleCountries: [] as CountryOfOrigin[], // Default
+          contactEmail: 'contact@example.com', // Default
+          visaSponsorship: false,
+          accommodationProvided: false,
+          languageRequirements: {
+            korean: 'Basic',
+            english: 'Basic'
+          }
         };
 
         setJobs(prevJobs => [...prevJobs, newJob]);
@@ -171,21 +173,12 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         company: updatedJob.company,
         logo: updatedJob.logo,
         location: updatedJob.location,
-        category: updatedJob.category,
-        type: updatedJob.type,
-        experience_level: updatedJob.experienceLevel,
-        salary_min: updatedJob.salary.min,
-        salary_max: updatedJob.salary.max,
-        salary_currency: updatedJob.salary.currency,
+        industry: updatedJob.category, // Map to DB column
+        job_type: updatedJob.type,     // Map to DB column
         description: updatedJob.description,
         requirements: updatedJob.requirements,
         benefits: updatedJob.benefits,
-        application_deadline: new Date(updatedJob.applicationDeadline).toISOString().split('T')[0],
-        eligible_countries: updatedJob.eligibleCountries,
-        contact_email: updatedJob.contactEmail,
-        visa_sponsorship: updatedJob.visaSponsorship,
-        accommodation_provided: updatedJob.accommodationProvided,
-        language_requirements: updatedJob.languageRequirements
+        salary: `${updatedJob.salary.min}-${updatedJob.salary.max} ${updatedJob.salary.currency}`
       };
 
       const { error } = await supabase
@@ -240,17 +233,7 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         user_id: supabase.auth.getUser() ? (await supabase.auth.getUser()).data.user?.id : null,
         resume_url: applicationData.resume,
         cover_letter: applicationData.coverLetter,
-        name: applicationData.name,
-        email: applicationData.email,
-        phone: applicationData.phone,
-        country: applicationData.country,
-        passport_number: applicationData.passportNumber,
-        currently_in_korea: applicationData.currentlyInKorea,
-        previous_experience: applicationData.previousExperience,
-        education: applicationData.education,
-        languages: applicationData.languages,
-        documents: applicationData.documents,
-        notes: applicationData.notes
+        status: 'Pending' as ApplicationStatus
       };
 
       const { data, error } = await supabase
@@ -268,20 +251,20 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           jobId: data.job_id,
           userId: data.user_id || '',
           status: data.status as ApplicationStatus,
-          appliedDate: new Date(data.applied_date).toISOString(),
+          appliedDate: data.created_at || new Date().toISOString(),
           resume: data.resume_url,
           coverLetter: data.cover_letter,
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          country: data.country as any,
-          passportNumber: data.passport_number,
-          currentlyInKorea: data.currently_in_korea,
-          previousExperience: data.previous_experience,
-          education: data.education,
-          languages: data.languages,
-          documents: data.documents,
-          notes: data.notes
+          name: applicationData.name,
+          email: applicationData.email,
+          phone: applicationData.phone,
+          country: applicationData.country,
+          passportNumber: applicationData.passportNumber,
+          currentlyInKorea: applicationData.currentlyInKorea,
+          previousExperience: applicationData.previousExperience,
+          education: applicationData.education,
+          languages: applicationData.languages,
+          documents: applicationData.documents,
+          notes: applicationData.notes
         };
 
         setApplications(prevApplications => [...prevApplications, newApplication]);

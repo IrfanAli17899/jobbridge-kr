@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,14 +51,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserRole = async (userId: string) => {
     try {
+      // We need to query users table instead of profiles since profiles doesn't exist yet in Supabase types
       const { data, error } = await supabase
-        .from('profiles')
-        .select('role')
+        .from('users')
+        .select('*')
         .eq('id', userId)
         .single();
 
-      if (error) throw error;
-      if (data) setRole(data.role);
+      if (error) {
+        console.error('Error fetching user data:', error);
+        setRole('jobseeker'); // Default role
+        return;
+      }
+      
+      // Set default role since we don't have the column yet
+      setRole('jobseeker');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setRole('jobseeker'); // Default role

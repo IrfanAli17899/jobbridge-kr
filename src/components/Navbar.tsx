@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { 
   DropdownMenu,
@@ -15,12 +14,11 @@ import {
 import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, signOut, isEmployer, isAdmin } = useAuth();
   
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -34,7 +32,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  // Close menu when switching from mobile to desktop
   useEffect(() => {
     if (!isMobile && isMenuOpen) {
       setIsMenuOpen(false);
@@ -53,12 +50,10 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold text-primary">KoreaWorks</span>
           </Link>
           
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
               Home
@@ -73,7 +68,6 @@ const Navbar = () => {
             )}
           </nav>
           
-          {/* Auth Buttons - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <DropdownMenu>
@@ -115,7 +109,6 @@ const Navbar = () => {
             )}
           </div>
           
-          {/* Mobile Menu Button */}
           <button
             onClick={toggleMenu}
             className="md:hidden focus:outline-none"
@@ -129,7 +122,6 @@ const Navbar = () => {
           </button>
         </div>
         
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t animate-in fade-in">
             <nav className="flex flex-col space-y-4 mb-4">
@@ -158,7 +150,6 @@ const Navbar = () => {
               )}
             </nav>
             
-            {/* Auth Buttons - Mobile */}
             <div className="flex flex-col space-y-2 pt-4 border-t">
               {user ? (
                 <>

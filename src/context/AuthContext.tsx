@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [role, setRole] = useState<string>('jobseeker');
+  const [role, setRole] = useState<string>('employer');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -60,15 +60,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('Error fetching user data:', error);
-        setRole('jobseeker'); // Default role
+        // setRole('jobseeker'); // Default role
         return;
       }
       
       // Set default role since we don't have the column yet
-      setRole('jobseeker');
+      // setRole('jobseeker');
     } catch (error) {
       console.error('Error fetching user role:', error);
-      setRole('jobseeker'); // Default role
+      // setRole('jobseeker'); // Default role
     }
   };
 

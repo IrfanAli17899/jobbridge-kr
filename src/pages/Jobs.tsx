@@ -392,8 +392,8 @@ const Jobs = () => {
                 </div>
               ) : filteredJobs.length > 0 ? (
                 <div className="grid gap-6 animate-fade-in">
-                  {filteredJobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
+                  {filteredJobs.map((job, index) => (
+                    <JobCard key={job.id} job={job} featured={index === 0} />
                   ))}
                 </div>
               ) : (

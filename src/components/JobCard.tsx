@@ -16,6 +16,11 @@ interface JobCardProps {
 const JobCard = ({ job, featured = false }: JobCardProps) => {
   const navigate = useNavigate();
 
+  // [TODO] Remove these lines after implementing the feature
+  job.eligibleCountries =  ['Pakistan', 'India', 'Vietnam', 'Bangladesh'];
+  job.visaSponsorship = true;
+  job.accommodationProvided = true;
+
   return (
     <Card 
       className={`overflow-hidden transition-all hover:shadow-md ${

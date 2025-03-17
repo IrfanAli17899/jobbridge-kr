@@ -98,7 +98,8 @@ const Apply = () => {
       }
 
       // Check if job application deadline has passed
-      const deadline = new Date(jobData?.applicationDeadline || '');
+      // const deadline = new Date(jobData?.applicationDeadline || '');
+      const deadline = new Date('2025-12-31'); // [TODO] Replace with the line above
       const today = new Date();
       if (deadline < today) {
         toast({

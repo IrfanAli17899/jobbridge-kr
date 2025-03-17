@@ -64,8 +64,8 @@ const Index = () => {
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
-                  {featuredJobs.map((job) => (
-                    <JobCard key={job.id} job={job} featured={job.id === '1'} />
+                  {featuredJobs.map((job, index) => (
+                    <JobCard key={job.id} job={job} featured={index === 0} />
                   ))}
                 </div>
                 

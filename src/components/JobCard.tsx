@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Briefcase, Calendar, DollarSign, Clock } from 'lucide-react';
+import { formatSalary, calculateDaysAgo } from '@/utils/jobUtils';
 
 interface JobCardProps {
   job: Job;
@@ -14,24 +15,6 @@ interface JobCardProps {
 
 const JobCard = ({ job, featured = false }: JobCardProps) => {
   const navigate = useNavigate();
-  
-  const formatSalary = (min: number, max: number, currency: string) => {
-    if (currency === 'KRW') {
-      return `${(min / 1000000).toFixed(1)}M - ${(max / 1000000).toFixed(1)}M KRW`;
-    }
-    return `${min} - ${max} ${currency}`;
-  };
-
-  // Calculate days since posting
-  const daysAgo = (dateString: string) => {
-    const posted = new Date(dateString);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - posted.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return '1 day ago';
-    return `${diffDays} days ago`;
-  };
 
   return (
     <Card 
@@ -89,7 +72,7 @@ const JobCard = ({ job, featured = false }: JobCardProps) => {
             </div>
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-1.5" />
-              <span>{daysAgo(job.postedDate)}</span>
+              <span>{calculateDaysAgo(job.postedDate)}</span>
             </div>
           </div>
           

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useJobContext } from '@/context/JobContext';
 import { Job, JobApplication, ApplicationStatus } from '@/lib/types';
@@ -51,6 +51,8 @@ import {
   User,
   Users,
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -58,6 +60,7 @@ const Dashboard = () => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All'>('All');
+  const { toast } = useToast();
   
   const filteredJobs = jobs.filter((job) => 
     job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -71,6 +74,12 @@ const Dashboard = () => {
   const filteredApplications = selectedJobApplications.filter(
     (app) => statusFilter === 'All' || app.status === statusFilter
   );
+  
+  // Effect to log applications for debugging
+  useEffect(() => {
+    console.log('All applications:', applications);
+    console.log('Filtered applications:', filteredApplications);
+  }, [applications, filteredApplications]);
   
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
@@ -99,7 +108,9 @@ const Dashboard = () => {
     
     const applicationsByCountry: Record<string, number> = {};
     applications.forEach(app => {
-      applicationsByCountry[app.country] = (applicationsByCountry[app.country] || 0) + 1;
+      if (app.country) {
+        applicationsByCountry[app.country] = (applicationsByCountry[app.country] || 0) + 1;
+      }
     });
     
     return {
@@ -115,13 +126,22 @@ const Dashboard = () => {
   
   const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
     updateApplicationStatus(applicationId, newStatus);
+    
+    toast({
+      title: "Application status updated",
+      description: `Status changed to ${newStatus}`,
+    });
+  };
+  
+  const viewApplicationDetails = (id: string) => {
+    navigate(`/application/${id}`);
   };
   
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8 mt-16">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Employer Dashboard</h1>
           <p className="text-muted-foreground">
@@ -338,7 +358,11 @@ const Dashboard = () => {
                               </SelectContent>
                             </Select>
                             
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => viewApplicationDetails(application.id)}
+                            >
                               View Details
                             </Button>
                           </div>
